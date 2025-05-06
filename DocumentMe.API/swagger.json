@@ -1,0 +1,201 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Weather API",
+    "description": "Simple Weather.API OpenAPI",
+    "contact": {
+      "name": "Dev Team",
+      "email": "devteam@yourcompany.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Retrieves the current weather forecast for the next 5 days.",
+        "description": "This endpoint returns a list of weather forecasts including the date,\r\ntemperature in Celsius, and a short summary description.\r\n            \r\nExample:\r\n\r\n    GET /WeatherForecast\r\n            \r\nResponse:\r\n\r\n    [\r\n        {\r\n            \"date\": \"2025-05-07\",\r\n            \"temperatureC\": 23,\r\n            \"summary\": \"Cloudy\"\r\n        },\r\n        ...\r\n    ]",
+        "operationId": "GetWeatherForecast",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Track request ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Forecast retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Submits a new weather forecast entry",
+        "description": "Creates a new **WeatherForecast** object. The request body must include:\r\n\r\n- **date**: The forecast date.\r\n\r\n- **temperatureC**: The temperature in Celsius.\r\n\r\n- **summary**: A short description of the weather.\r\n\r\n**Example Request:**\r\n\r\n```json\r\n{\r\n    \"date\": \"2025-05-06\",\r\n    \"temperatureC\": 100,\r\n    \"summary\": \"Sunny\"\r\n}\r\n```",
+        "operationId": "PostWeatherForecast",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Track request ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "The weather forecast object to be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherForecast"
+              },
+              "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The weather forecast was created successfully.",
+            "links": {
+              "getForecastById": {
+                "operationId": "GetWeatherForecast",
+                "description": "Get the created forecast by ID."
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data. The request body does not conform to the expected schema."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          }
+        }
+      }
+    },
+    "/WeatherForecast/{id}": {
+      "put": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Updates an existing weather forecast entry.",
+        "description": "Updates the weather forecast for the given ID with new values.\r\n**Required fields**:\r\n\r\n- `date` (ISO 8601 format, e.g., \"2025-05-07\")\r\n\r\n- `temperatureC` (integer)\r\n\r\n- `summary` (short weather description)\r\n\r\n**Example Request**:\r\n     \r\nPUT /WeatherForecast\r\n\r\n\r\n    {\r\n      \"date\": \"2025-05-07\",\r\n      \"temperatureC\": 23,\r\n      \"summary\": \"Cloudy\"\r\n    }\r\n\r\n",
+        "operationId": "UpdateWeatherForecast",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Track request ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherForecast"
+              },
+              "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherForecast"
+              },
+              "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherForecast"
+              },
+              "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The weather forecast was updated successfully.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherForecast"
+                },
+                "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherForecast"
+                },
+                "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherForecast"
+                },
+                "example": {"id":0,"date":"2025-05-06","temperatureC":25,"summary":"Partly cloudy"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data. The request body does not conform to the expected schema."
+          },
+          "404": {
+            "description": "The weather forecast with the specified ID was not found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WeatherForecast": {
+        "required": [
+          "date",
+          "id",
+          "summary"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "temperatureC": {
+            "maximum": 100,
